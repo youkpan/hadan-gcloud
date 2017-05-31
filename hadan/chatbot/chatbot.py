@@ -37,6 +37,7 @@ from hadan.chatbot.textdata import *
 #from chatbot.model import Model
 import subprocess
 import time
+import random
 
 
 class Chatbot:
@@ -124,7 +125,7 @@ class Chatbot:
 
         # Network options (Warning: if modifying something here, also make the change on save/loadParams() )
         nnArgs = parser.add_argument_group('Network options', 'architecture related option')
-        nnArgs.add_argument('--hiddenSize', type=int, default=512, help='number of hidden units in each RNN cell')
+        nnArgs.add_argument('--hiddenSize', type=int, default=1536, help='number of hidden units in each RNN cell')
         nnArgs.add_argument('--numLayers', type=int, default=2, help='number of rnn layers')
         nnArgs.add_argument('--softmaxSamples', type=int, default=0, help='Number of samples in the sampled softmax loss function. A value of 0 deactivates sampled softmax')
         nnArgs.add_argument('--initEmbeddings', action='store_true', help='if present, the program will initialize the embeddings with pre-trained word2vec vectors')
@@ -133,7 +134,7 @@ class Chatbot:
 
         # Training options
         trainingArgs = parser.add_argument_group('Training options')
-        trainingArgs.add_argument('--numEpochs', type=int, default=30, help='maximum number of epochs to run')
+        trainingArgs.add_argument('--numEpochs', type=int, default=60, help='maximum number of epochs to run')
         trainingArgs.add_argument('--saveEvery', type=int, default=2000, help='nb of mini-batch step before creating a model checkpoint')
         trainingArgs.add_argument('--batchSize', type=int, default=128, help='mini-batch size')
         trainingArgs.add_argument('--learningRate', type=float, default=0.0005, help='Learning rate')
@@ -535,7 +536,7 @@ class Chatbot:
         """
 		
         try:
-
+            idSample = random.randint(0, 100000)
             try:
                 subprocess.check_call(['tar', 'cf' , 'save.tar' , 'save'  ]  )
             except Exception as e:
@@ -555,10 +556,11 @@ class Chatbot:
             	print('saving to hadan finish')
             except Exception as e:
                 pass 
+            #gsutil cp -p gs://telfordpan-hadan1-train/save.tar.xz gs://telfordpan-hadan1-train/save.tar.xz（副本）
             try:
-            	print('saving to telfordpan ')
-                subprocess.check_call(['gsutil', 'cp' , 'save.tar.xz' ,'gs://telfordpan-hadan1-train' ]  )
-            	print('saving to hadan finish')
+            	print('saving to backup ')
+                subprocess.check_call(['gsutil', 'cp' , 'gs://hadan-data/save.tar.xz' ,'gs://hadan-data/save.tar.xz-'+str(idSample) ]  )
+            	print('saving to backup ok')
             except Exception as e:
                 pass    
                 

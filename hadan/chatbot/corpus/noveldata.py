@@ -62,21 +62,9 @@ class NovelData:
         #for line in f.readlines():
         position = 0
         while(position+500 < text_words):
-          while(position +100 < text_words ):
-              position +=1
 
+              position +=1
               word_s = str(lineu[position])
-              if( word_s =='，' or word_s =='，' or  word_s =='。'or word_s ==';' or word_s =='！'or word_s =='？' or word_s =='”'
-                    or word_s ==':'  or word_s =='.' or word_s ==';' or word_s =='!' or word_s =='?' or word_s =='"' ):
-                    break;
-
-              position +=1
-
-              if word_s =="“" :
-                position +=1
-              #else:
-                #position +=1
-
               #lineu=line.decode('utf-8')
               line_vector = []
               #line_mark = np.ones(sentence_len)
@@ -93,11 +81,6 @@ class NovelData:
                   #word_v[dict_index[word_s]] = 1
                   #word_v[int(dict_index[word_s]%84)] = 1
                   #，。;！？”“
-
-                  if(word_s ==','  or word_s ==','
-                    or word_s =='，'  or word_s =='“'):
-                  #print(line_v)
-                      line_mark[k] = 0
 
                      #print (word_s) word_s =='：'  or
                   if((( word_s =='，') and (position_t-position >7)) or
