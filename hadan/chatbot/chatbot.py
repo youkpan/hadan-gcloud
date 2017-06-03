@@ -118,26 +118,26 @@ class Chatbot:
         datasetArgs.add_argument('--corpus', choices=TextData.corpusChoices(), default=TextData.corpusChoices()[5], help='corpus on which extract the dataset.')
         datasetArgs.add_argument('--datasetTag', type=str, default='', help='add a tag to the dataset (file where to load the vocabulary and the precomputed samples, not the original corpus). Useful to manage multiple versions. Also used to define the file used for the lightweight format.')  # The samples are computed from the corpus if it does not exist already. There are saved in \'data/samples/\'
         datasetArgs.add_argument('--ratioDataset', type=float, default=1.0, help='ratio of dataset used to avoid using the whole dataset')  # Not implemented, useless ?
-        datasetArgs.add_argument('--maxLength', type=int, default=20, help='maximum length of the sentence (for input and output), define number of maximum step of the RNN')
+        datasetArgs.add_argument('--maxLength', type=int, default=14, help='maximum length of the sentence (for input and output), define number of maximum step of the RNN')
         datasetArgs.add_argument('--filterVocab', type=int, default=1, help='remove rarelly used words (by default words used only once). 0 to keep all words.')
         datasetArgs.add_argument('--skipLines', action='store_true', help='Generate training samples by only using even conversation lines as questions (and odd lines as answer). Useful to train the network on a particular person.')
         datasetArgs.add_argument('--vocabularySize', type=int, default=40000, help='Limit the number of words in the vocabulary (0 for unlimited)')
 
         # Network options (Warning: if modifying something here, also make the change on save/loadParams() )
         nnArgs = parser.add_argument_group('Network options', 'architecture related option')
-        nnArgs.add_argument('--hiddenSize', type=int, default=512, help='number of hidden units in each RNN cell')
+        nnArgs.add_argument('--hiddenSize', type=int, default=1024, help='number of hidden units in each RNN cell')
         nnArgs.add_argument('--numLayers', type=int, default=2, help='number of rnn layers')
         nnArgs.add_argument('--softmaxSamples', type=int, default=0, help='Number of samples in the sampled softmax loss function. A value of 0 deactivates sampled softmax')
         nnArgs.add_argument('--initEmbeddings', action='store_true', help='if present, the program will initialize the embeddings with pre-trained word2vec vectors')
-        nnArgs.add_argument('--embeddingSize', type=int, default=64, help='embedding size of the word representation')
+        nnArgs.add_argument('--embeddingSize', type=int, default=128, help='embedding size of the word representation')
         nnArgs.add_argument('--embeddingSource', type=str, default="GoogleNews-vectors-negative300.bin", help='embedding file to use for the word representation')
 
         # Training options
         trainingArgs = parser.add_argument_group('Training options')
         trainingArgs.add_argument('--numEpochs', type=int, default=2000, help='maximum number of epochs to run')
-        trainingArgs.add_argument('--saveEvery', type=int, default=4000, help='nb of mini-batch step before creating a model checkpoint')
+        trainingArgs.add_argument('--saveEvery', type=int, default=2000, help='nb of mini-batch step before creating a model checkpoint')
         trainingArgs.add_argument('--batchSize', type=int, default=256, help='mini-batch size')
-        trainingArgs.add_argument('--learningRate', type=float, default=0.001, help='Learning rate')
+        trainingArgs.add_argument('--learningRate', type=float, default=0.0007, help='Learning rate')
         trainingArgs.add_argument('--dropout', type=float, default=0.9, help='Dropout rate (keep probabilities)')
 
 
@@ -541,10 +541,16 @@ class Chatbot:
             
             try:
             	print('saving to backup ')
-                subprocess.check_call(['gsutil', 'cp' , 'gs://hadan-data/save.tar.xz' ,'gs://hadan-data/save-backup.tar.xz']  )
+                subprocess.check_call(['gsutil', 'cp' , 'gs://hadan-data/save-14-1024.tar.xz' ,'gs://hadan-data/save-14-1024-backup.tar.xz']  )
             	print('saving to backup ok')
             except Exception as e:
                 pass    
+            try:
+                subprocess.check_call(['rm',  'save.tar', 'save.tar.xz' , '-rf'  ]  )
+            except Exception as e:
+                print('saving to save.tar ')
+                pass
+            time.sleep(5)
 
             try:
                 subprocess.check_call(['tar', 'cf' , 'save.tar' , 'save'  ]  )
@@ -561,7 +567,7 @@ class Chatbot:
             time.sleep(5)
             try:
             	print('saving to hadan')
-                subprocess.check_call(['gsutil', 'cp' , 'save.tar.xz' ,'gs://hadan-data/' ]  )
+                subprocess.check_call(['gsutil', 'cp' , 'save.tar.xz' ,'gs://hadan-data/save-14-1024.tar.xz' ]  )
             	print('saving to hadan finish')
             except Exception as e:
                 pass 
