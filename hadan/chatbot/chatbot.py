@@ -125,20 +125,20 @@ class Chatbot:
 
         # Network options (Warning: if modifying something here, also make the change on save/loadParams() )
         nnArgs = parser.add_argument_group('Network options', 'architecture related option')
-        nnArgs.add_argument('--hiddenSize', type=int, default=1024, help='number of hidden units in each RNN cell')
+        nnArgs.add_argument('--hiddenSize', type=int, default=1536, help='number of hidden units in each RNN cell')
         nnArgs.add_argument('--numLayers', type=int, default=2, help='number of rnn layers')
         nnArgs.add_argument('--softmaxSamples', type=int, default=0, help='Number of samples in the sampled softmax loss function. A value of 0 deactivates sampled softmax')
         nnArgs.add_argument('--initEmbeddings', action='store_true', help='if present, the program will initialize the embeddings with pre-trained word2vec vectors')
-        nnArgs.add_argument('--embeddingSize', type=int, default=128, help='embedding size of the word representation')
+        nnArgs.add_argument('--embeddingSize', type=int, default=256, help='embedding size of the word representation')
         nnArgs.add_argument('--embeddingSource', type=str, default="GoogleNews-vectors-negative300.bin", help='embedding file to use for the word representation')
 
         # Training options
         trainingArgs = parser.add_argument_group('Training options')
         trainingArgs.add_argument('--numEpochs', type=int, default=2000, help='maximum number of epochs to run')
-        trainingArgs.add_argument('--saveEvery', type=int, default=2000, help='nb of mini-batch step before creating a model checkpoint')
+        trainingArgs.add_argument('--saveEvery', type=int, default=1000, help='nb of mini-batch step before creating a model checkpoint')
         trainingArgs.add_argument('--batchSize', type=int, default=256, help='mini-batch size')
-        trainingArgs.add_argument('--learningRate', type=float, default=0.0007, help='Learning rate')
-        trainingArgs.add_argument('--dropout', type=float, default=0.9, help='Dropout rate (keep probabilities)')
+        trainingArgs.add_argument('--learningRate', type=float, default=0.0005, help='Learning rate')
+        trainingArgs.add_argument('--dropout', type=float, default=0.95, help='Dropout rate (keep probabilities)')
 
 
         return parser.parse_args(args)
@@ -541,7 +541,7 @@ class Chatbot:
             
             try:
             	print('saving to backup ')
-                subprocess.check_call(['gsutil', 'cp' , 'gs://hadan-data/save-14-1024.tar.xz' ,'gs://hadan-data/save-14-1024-backup.tar.xz']  )
+                subprocess.check_call(['gsutil', 'cp' , 'gs://hadan-data/save-14-1536.tar.xz' ,'gs://hadan-data/save-14-1536-backup.tar.xz']  )
             	print('saving to backup ok')
             except Exception as e:
                 pass    
@@ -567,7 +567,7 @@ class Chatbot:
             time.sleep(5)
             try:
             	print('saving to hadan')
-                subprocess.check_call(['gsutil', 'cp' , 'save.tar.xz' ,'gs://hadan-data/save-14-1024.tar.xz' ]  )
+                subprocess.check_call(['gsutil', 'cp' , 'save.tar.xz' ,'gs://hadan-data/save-14-1536.tar.xz' ]  )
             	print('saving to hadan finish')
             except Exception as e:
                 pass 

@@ -3,9 +3,10 @@ import subprocess
 import time
 
 tmp_path = './'
-files = 'gs://hadan-data/data.tar.xz'
+#files = 'gs://hadan-data/data.tar.xz'
 furl = 'gs://hadan-data/data14.tar.xz'
-saveurl = 'gs://hadan-data/save-14-1024.tar.xz'
+#or use wget : https://storage.googleapis.com/hadan-data/data14.tar.xz
+saveurl = 'gs://hadan-data/save-14-1536.tar.xz'
 idSample = 0
 
 try:
@@ -28,7 +29,10 @@ except Exception as e:
     pass 
 
 time.sleep(5)  
-    
+try:
+    subprocess.check_call(['mkdir', 'save']  )
+except Exception as e:
+    pass    
  
 try:
     subprocess.check_call(['gsutil','cp' ,saveurl ,'.' ])
@@ -37,16 +41,11 @@ except Exception as e:
     pass 
 
 try:
-    subprocess.check_call(['tar', '-Jxf' ,'save-14-1024.tar.xz'] )
+    subprocess.check_call(['tar', '-Jxf' ,'save-14-1536.tar.xz'] )
 except Exception as e:
     pass 
 
 time.sleep(5)  
-
-try:
-    subprocess.check_call(['mkdir', 'save']  )
-except Exception as e:
-    pass 
 '''    
 try:
     #subprocess.check_call(['tar', 'xf' , 'save.tar'] )
